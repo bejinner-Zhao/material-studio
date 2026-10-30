@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", "PingFang SC",
+    "Microsoft YaHei", sans-serif;
+}
+
+:focus-visible {
+  outline: 2px solid theme(colors.accent);
+  outline-offset: 2px;
+}
+
+@layer utilities {
+  .card-surface {
+    @apply rounded-card border border-line bg-panel;
+  }
+}

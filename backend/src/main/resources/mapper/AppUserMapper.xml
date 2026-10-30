@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xiaoying.materialstudio.mapper.AppUserMapper">
+
+    <resultMap id="appUserMap" type="com.xiaoying.materialstudio.user.AppUser">
+        <id column="id" property="id"/>
+        <result column="public_id" property="publicId"/>
+        <result column="nickname" property="nickname"/>
+        <result column="email" property="email"/>
+        <result column="created_at" property="createdAt"/>
+    </resultMap>
+
+    <select id="findByPublicId" resultMap="appUserMap">
+        SELECT id, public_id, nickname, email, created_at
+        FROM app_user
+        WHERE public_id = #{publicId}
+    </select>
+
+    <select id="findById" resultMap="appUserMap">
+        SELECT id, public_id, nickname, email, created_at
+        FROM app_user
+        WHERE id = #{id}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        INSERT INTO app_user (public_id, nickname, email)
+        VALUES (#{publicId}, #{nickname}, #{email})
+    </insert>
+
+</mapper>

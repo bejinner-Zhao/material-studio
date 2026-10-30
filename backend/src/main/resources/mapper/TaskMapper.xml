@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xiaoying.materialstudio.mapper.TaskMapper">
+
+    <resultMap id="creationTaskMap" type="com.xiaoying.materialstudio.task.CreationTask">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="template_id" property="templateId"/>
+        <result column="template_title" property="templateTitle"/>
+        <result column="template_cover_url" property="templateCoverUrl"/>
+        <result column="status" property="status"/>
+        <result column="stage" property="stage"/>
+        <result column="error_stage" property="errorStage"/>
+        <result column="error_message" property="errorMessage"/>
+        <result column="result_url" property="resultUrl"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="started_at" property="startedAt"/>
+        <result column="finished_at" property="finishedAt"/>
+        <result column="updated_at" property="updatedAt"/>
+    </resultMap>
+
+    <sql id="taskColumns">
+        id, user_id, template_id, template_title, template_cover_url, status, stage,
+        error_stage, error_message, result_url, created_at, started_at, finished_at, updated_at
+    </sql>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        INSERT INTO creation_task
+            (user_id, template_id, template_title, template_cover_url, status, created_at)
+        VALUES
+            (#{userId}, #{templateId}, #{templateTitle}, #{templateCoverUrl}, #{status}, #{createdAt})
+    </insert>
+
+    <select id="findById" resultMap="creationTaskMap">
+        SELECT <include refid="taskColumns"/>
+        FROM creation_task
+        WHERE id = #{id}
+    </select>
+
+    <select id="findByIdAndUserId" resultMap="creationTaskMap">
+        SELECT <include refid="taskColumns"/>
+        FROM creation_task
+        WHERE id = #{id} AND user_id = #{userId}
+    </select>
+
+    <select id="findByUserId" resultMap="creationTaskMap">
+        SELECT <include refid="taskColumns"/>
+        FROM creation_task
+        WHERE user_id = #{userId}
+        ORDER BY id DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <select id="findActiveByUserId" resultMap="creationTaskMap">
+        SELECT <include refid="taskColumns"/>
+        FROM creation_task
+        WHERE user_id = #{userId} AND status IN ('PENDING', 'RUNNING')
+        ORDER BY id DESC
+    </select>
+
+    <select id="findPendingIds" resultType="java.lang.Long">
+        SELECT id
+        FROM creation_task
+        WHERE status = 'PENDING'
+        ORDER BY id ASC
+        LIMIT #{limit}
+    </select>
+
+    <update id="claim">
+        UPDATE creation_task
+        SET status = 'RUNNING', started_at = NOW()
+        WHERE id = #{id} AND status = 'PENDING'
+    </update>
+
+    <update id="updateStage">
+        UPDATE creation_task
+        SET stage = #{stage}
+        WHERE id = #{id} AND status = 'RUNNING'
+    </update>
+
+    <update id="markSucceeded">
+        UPDATE creation_task
+        SET status = 'SUCCEEDED',
+            stage = 'FINALIZING',
+            result_url = #{resultUrl},
+            error_stage = NULL,
+            error_message = NULL,
+            finished_at = NOW()
+        WHERE id = #{id} AND status = 'RUNNING'
+    </update>
+
+    <update id="markFailed">
+        UPDATE creation_task
+        SET status = 'FAILED',
+            error_stage = #{stage,jdbcType=VARCHAR},
+            error_message = #{message,jdbcType=VARCHAR},
+            finished_at = NOW()
+        WHERE id = #{id} AND status IN ('PENDING', 'RUNNING')
+    </update>
+
+    <update id="failInterruptedTasks">
+        UPDATE creation_task
+        SET status = 'FAILED',
+            error_stage = stage,
+            error_message = #{message},
+            finished_at = NOW()
+        WHERE status = 'RUNNING'
+    </update>
+
+</mapper>

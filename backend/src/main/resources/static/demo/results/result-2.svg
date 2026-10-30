@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1000" viewBox="0 0 800 1000" role="img" aria-label="模拟生成结果">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#5B2C6F"/>
+      <stop offset="100%" stop-color="#C39BD3"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="1000" fill="url(#bg)"/>
+  <rect x="48" y="48" width="704" height="904" fill="none" stroke="#ffffff" stroke-opacity="0.55" stroke-width="3" rx="18"/>
+  <circle cx="200" cy="270" r="130" fill="#ffffff" fill-opacity="0.12"/>
+  <circle cx="600" cy="600" r="180" fill="#ffffff" fill-opacity="0.10"/>
+  <text x="400" y="500" text-anchor="middle" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="58" font-weight="700" fill="#ffffff">模拟生成结果</text>
+  <text x="400" y="562" text-anchor="middle" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="26" fill="#ffffff" fill-opacity="0.8">WATERCOLOR · DEMO OUTPUT</text>
+  <text x="400" y="880" text-anchor="middle" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="20" fill="#ffffff" fill-opacity="0.55">此图由后端结果整理阶段写入</text>
+</svg>
