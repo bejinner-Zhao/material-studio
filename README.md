@@ -2,7 +2,9 @@
 
 小影科技全栈笔试题实现。用户浏览模板、上传图片、提交制作任务，任务在后台分三步异步执行，前端跟踪状态并查看历史结果。
 
-> 当前状态：**主流程完成**。前后端与容器编排均已实现，模板浏览、上传、提交、后台三段制作、轮询与历史记录可以串成闭环。测试与 CI 尚未开始（见文末「进度」）。
+> 当前状态：**主流程完成**。前后端与容器编排均已实现，模板浏览、上传、提交、后台三段制作、轮询与历史记录可以串成闭环。
+>
+> 仓库：https://github.com/bejinner-Zhao/material-studio ｜ 验收 commit：`730eedf`（GitHub Actions 已通过）
 
 ---
 
@@ -304,7 +306,7 @@ curl -X POST http://localhost:8080/api/dev/simulator -H "Content-Type: applicati
 | 前端：轮询、异常态、多任务、刷新恢复、历史记录 | 已完成 |
 | 后端单元测试（步骤顺序 / 失败中断 / 提交校验 / 身份切换） | 已完成，12 个用例通过 |
 | 前端单元测试（轮询策略 / 多任务 / 异常区分） | 已完成，6 个用例通过 |
-| GitHub Actions CI | 已完成（尚未在远端触发） |
+| GitHub Actions CI | 已完成，远端实跑通过（前端 2m22s / 后端 24s） |
 | README（AI 使用说明、部署与回滚） | 已完成 |
 
 ## 素材与依赖来源
@@ -343,4 +345,4 @@ curl -X POST http://localhost:8080/api/dev/simulator -H "Content-Type: applicati
 - 后端运行时：已在 MySQL 8.0.31 + JDK 17 上实跑通过——模板查询、上传与文件头校验、三阶段异步执行、失败注入、多任务排队、身份隔离均验证；`task_stage_log` 的实际顺序与单元测试一致。
 - 前端运行时：已在浏览器实际操作——分类筛选、上传、提交、轮询、失败卡片、刷新恢复、切换身份均正常，桌面与移动两种宽度都检查过。
 - 容器：**未验证**。开发机未安装 Docker，`docker compose up --build` 未执行过。
-- CI：**部分验证**。已在本地按 `.github/workflows/ci.yml` 逐条复现：后端 `mvn verify`、前端 `npm ci` → `lint` → `typecheck` → `test` → `build` 全部通过；尚未在 GitHub 上真正触发。
+- CI：**已通过**。push 触发 GitHub Actions，后端 `mvn verify`（24s）与前端 `npm ci` → `lint` → `typecheck` → `test` → `build`（2m22s）两个 job 均为 success。
